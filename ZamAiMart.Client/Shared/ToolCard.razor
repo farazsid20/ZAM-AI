@@ -1,0 +1,63 @@
+@using ZamAiMart.Client.Models
+@inject Microsoft.JSInterop.IJSRuntime JS
+
+<div class="group bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 hover:shadow-xl hover:shadow-violet-100 dark:hover:shadow-violet-900/20 hover:border-violet-200 dark:hover:border-violet-700 transition-all duration-300 cursor-pointer flex flex-col"
+     @onclick="OpenWebsite">
+    <div class="flex items-start justify-between mb-3">
+        <div class="flex items-center space-x-3">
+            <div class="w-12 h-12 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center shrink-0">
+                @if (!string.IsNullOrEmpty(Tool.LogoURL))
+                {
+                    <img src="@Tool.LogoURL" alt="@Tool.Name logo" class="w-full h-full object-cover"
+                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+                    <span class="text-xl hidden">@GetIcon()</span>
+                }
+                else
+                {
+                    <span class="text-xl">🤖</span>
+                }
+            </div>
+            <div class="min-w-0">
+                <h3 class="font-bold text-gray-900 dark:text-white text-sm truncate group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">@Tool.Name</h3>
+                <span class="text-xs text-gray-500 dark:text-gray-400 truncate block">@Tool.Category</span>
+            </div>
+        </div>
+    </div>
+    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed line-clamp-2 flex-1 mb-4">@Tool.Description</p>
+    <div class="flex items-center justify-between mt-auto pt-3 border-t border-gray-100 dark:border-gray-700">
+        <span class="@(Tool.IsFree ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400" : "bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400") text-xs font-bold px-2.5 py-1 rounded-lg">
+            @Tool.FormattedPrice
+        </span>
+        <button @onclick:stopPropagation="true" @onclick="OpenWebsite"
+                class="text-xs bg-violet-600 hover:bg-violet-700 text-white px-3 py-1.5 rounded-lg font-medium transition-colors flex items-center gap-1">
+            Visit
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public AIWebsiteDto Tool { get; set; } = null!;
+
+    private async Task OpenWebsite()
+    {
+        await JS.InvokeVoidAsync("open", Tool.WebsiteURL, "_blank");
+    }
+
+    private string GetIcon() => Tool.Category switch
+    {
+        var c when c.Contains("Chatbot") => "💬",
+        var c when c.Contains("Image") => "🎨",
+        var c when c.Contains("Video") => "🎬",
+        var c when c.Contains("Code") => "💻",
+        var c when c.Contains("Writing") => "✍️",
+        var c when c.Contains("Voice") || c.Contains("Audio") => "🎙️",
+        var c when c.Contains("Music") => "🎵",
+        var c when c.Contains("Business") => "📈",
+        var c when c.Contains("Productivity") => "⚡",
+        var c when c.Contains("Design") => "🖌️",
+        _ => "🤖"
+    };
+}

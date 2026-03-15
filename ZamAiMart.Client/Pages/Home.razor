@@ -1,0 +1,172 @@
+@page "/"
+@using ZamAiMart.Client.Models
+@using ZamAiMart.Client.Services
+@using ZamAiMart.Client.Shared
+@inject ApiService Api
+@inject NavigationManager Nav
+
+<PageTitle>ZAM AI MART - Discover the Best AI Tools in One Place</PageTitle>
+
+<!-- Hero -->
+<section class="relative bg-gradient-to-br from-violet-700 via-indigo-700 to-purple-800 text-white overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-10 left-10 w-72 h-72 bg-white rounded-full filter blur-3xl"></div>
+        <div class="absolute bottom-10 right-10 w-96 h-96 bg-pink-300 rounded-full filter blur-3xl"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white/90 text-sm font-medium px-4 py-2 rounded-full mb-6 border border-white/20">
+            <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+            50+ AI Tools Listed
+        </div>
+        <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black mb-4 tracking-tight">
+            ZAM <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-300">AI</span> MART
+        </h1>
+        <p class="text-xl sm:text-2xl text-white/80 mb-8 max-w-2xl mx-auto font-light">
+            Discover the Best AI Tools in One Place
+        </p>
+        <div class="max-w-2xl mx-auto">
+            <div class="relative">
+                <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="text" @bind="_search" @onkeydown="HandleSearchKey"
+                       placeholder="Search AI tools, categories, keywords..."
+                       class="w-full pl-12 pr-4 py-4 rounded-2xl text-gray-900 text-base shadow-2xl focus:outline-none focus:ring-2 focus:ring-violet-300 border-0" />
+                <button @onclick="ExecuteSearch"
+                        class="absolute right-2 top-1/2 -translate-y-1/2 bg-violet-600 hover:bg-violet-700 text-white px-5 py-2 rounded-xl font-medium transition-colors text-sm">
+                    Search
+                </button>
+            </div>
+        </div>
+        <div class="flex flex-wrap justify-center gap-8 mt-12">
+            <div class="text-center"><div class="text-3xl font-black">50+</div><div class="text-white/70 text-sm">AI Tools</div></div>
+            <div class="text-center"><div class="text-3xl font-black">10</div><div class="text-white/70 text-sm">Categories</div></div>
+            <div class="text-center"><div class="text-3xl font-black">₹</div><div class="text-white/70 text-sm">INR Pricing</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured AI Tools -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h2 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white">⭐ Featured AI Tools</h2>
+            <p class="text-gray-500 dark:text-gray-400 mt-1">Top AI tools to get started</p>
+        </div>
+        <a href="/tools" class="text-violet-600 dark:text-violet-400 hover:text-violet-700 text-sm font-medium flex items-center gap-1 transition-colors">
+            View All <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+        </a>
+    </div>
+    @if (_loadingFeatured)
+    {
+        <LoadingSpinner Message="Loading featured tools..." />
+    }
+    else
+    {
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            @foreach (var tool in _featured)
+            {
+                <ToolCard Tool="tool" />
+            }
+        </div>
+    }
+</section>
+
+<!-- Categories -->
+<section class="bg-gray-100 dark:bg-gray-800/50 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10">
+            <h2 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white mb-2">Browse by Category</h2>
+            <p class="text-gray-500 dark:text-gray-400">Explore AI tools organized by their primary use case</p>
+        </div>
+        @if (_loadingCategories)
+        {
+            <LoadingSpinner Message="Loading categories..." />
+        }
+        else
+        {
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                @foreach (var cat in _categories)
+                {
+                    <CategoryCard Category="cat" />
+                }
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Latest Tools -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h2 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white">🆕 Latest AI Tools</h2>
+            <p class="text-gray-500 dark:text-gray-400 mt-1">Recently added tools</p>
+        </div>
+        <a href="/tools" class="text-violet-600 dark:text-violet-400 hover:text-violet-700 text-sm font-medium flex items-center gap-1 transition-colors">
+            View All <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+        </a>
+    </div>
+    @if (_loadingLatest)
+    {
+        <LoadingSpinner Message="Loading latest tools..." />
+    }
+    else
+    {
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            @foreach (var tool in _latest)
+            {
+                <ToolCard Tool="tool" />
+            }
+        </div>
+    }
+</section>
+
+<!-- CTA -->
+<section class="bg-gradient-to-r from-violet-600 to-indigo-600 py-16">
+    <div class="max-w-4xl mx-auto px-4 text-center text-white">
+        <h2 class="text-3xl font-black mb-4">Ready to Find Your Perfect AI Tool?</h2>
+        <p class="text-white/80 mb-8 text-lg">Browse 50+ AI tools with prices in Indian Rupees</p>
+        <a href="/tools" class="inline-block bg-white text-violet-700 font-bold px-8 py-3 rounded-xl hover:shadow-lg transition-all">
+            Explore All Tools →
+        </a>
+    </div>
+</section>
+
+@code {
+    private List<AIWebsiteDto> _featured = new(), _latest = new();
+    private List<CategoryDto> _categories = new();
+    private bool _loadingFeatured = true, _loadingLatest = true, _loadingCategories = true;
+    private string _search = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.WhenAll(LoadFeatured(), LoadLatest(), LoadCategories());
+    }
+
+    private async Task LoadFeatured()
+    {
+        _featured = await Api.GetFeaturedAsync(8);
+        _loadingFeatured = false;
+    }
+    private async Task LoadLatest()
+    {
+        _latest = await Api.GetLatestAsync(12);
+        _loadingLatest = false;
+    }
+    private async Task LoadCategories()
+    {
+        _categories = await Api.GetCategoriesAsync();
+        _loadingCategories = false;
+    }
+
+    private async Task HandleSearchKey(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter") await ExecuteSearch();
+    }
+    private Task ExecuteSearch()
+    {
+        if (!string.IsNullOrWhiteSpace(_search))
+            Nav.NavigateTo($"/tools?query={Uri.EscapeDataString(_search)}");
+        return Task.CompletedTask;
+    }
+}

@@ -1,0 +1,117 @@
+@page "/tools"
+@using ZamAiMart.Client.Models
+@using ZamAiMart.Client.Services
+@using ZamAiMart.Client.Shared
+@inject ApiService Api
+@inject NavigationManager Nav
+
+<PageTitle>AI Tools - ZAM AI MART</PageTitle>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-black text-gray-900 dark:text-white mb-2">All AI Tools</h1>
+        <p class="text-gray-500 dark:text-gray-400">Browse @_filtered.Count tools with INR pricing</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-4 mb-8 flex flex-wrap gap-3 items-center">
+        <div class="relative flex-1 min-w-48">
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input type="text" @bind="_search" @bind:event="oninput" @bind:after="Filter"
+                   placeholder="Search tools..."
+                   class="w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300 dark:text-white" />
+        </div>
+
+        <select @bind="_categoryFilter" @bind:after="Filter"
+                class="py-2.5 px-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-700 text-sm focus:outline-none dark:text-white">
+            <option value="">All Categories</option>
+            @foreach (var cat in _categories)
+            {
+                <option value="@cat.CategoryName">@cat.CategoryName</option>
+            }
+        </select>
+
+        <label class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
+            <input type="checkbox" @bind="_freeOnly" @bind:after="Filter" class="rounded text-violet-600" />
+            Free only
+        </label>
+
+        @if (!string.IsNullOrEmpty(_search) || !string.IsNullOrEmpty(_categoryFilter) || _freeOnly)
+        {
+            <button @onclick="ClearFilters" class="text-sm text-violet-600 dark:text-violet-400 hover:underline">
+                Clear filters
+            </button>
+        }
+    </div>
+
+    @if (_loading)
+    {
+        <LoadingSpinner Message="Loading tools..." />
+    }
+    else if (_filtered.Count == 0)
+    {
+        <div class="text-center py-16">
+            <div class="text-6xl mb-4">🔍</div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">No tools found</h3>
+            <p class="text-gray-500 dark:text-gray-400">Try adjusting your search or filters.</p>
+        </div>
+    }
+    else
+    {
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            @foreach (var tool in _filtered)
+            {
+                <ToolCard Tool="tool" />
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [SupplyParameterFromQuery] private string? query { get; set; }
+    [SupplyParameterFromQuery] private string? category { get; set; }
+
+    private List<AIWebsiteDto> _all = new(), _filtered = new();
+    private List<CategoryDto> _categories = new();
+    private bool _loading = true, _freeOnly;
+    private string _search = "", _categoryFilter = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        _search = query ?? "";
+        _categoryFilter = category ?? "";
+
+        var allTask = Api.GetAllWebsitesAsync();
+        var catsTask = Api.GetCategoriesAsync();
+        await Task.WhenAll(allTask, catsTask);
+        var all = await allTask;
+        var cats = await catsTask;
+        _all = all;
+        _categories = cats;
+        _loading = false;
+        Filter();
+    }
+
+    private void Filter()
+    {
+        _filtered = _all.Where(w =>
+            (string.IsNullOrEmpty(_search) ||
+             w.Name.Contains(_search, StringComparison.OrdinalIgnoreCase) ||
+             w.Description.Contains(_search, StringComparison.OrdinalIgnoreCase) ||
+             w.Category.Contains(_search, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrEmpty(_categoryFilter) || w.Category == _categoryFilter) &&
+            (!_freeOnly || w.IsFree)
+        ).ToList();
+    }
+
+    private void ClearFilters()
+    {
+        _search = "";
+        _categoryFilter = "";
+        _freeOnly = false;
+        Filter();
+    }
+}

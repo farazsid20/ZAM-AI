@@ -1,0 +1,9 @@
+.dotnet/
+.nuget/
+reference-site/
+
+**/bin/
+**/obj/
+
+.vs/
+.vscode/*.log

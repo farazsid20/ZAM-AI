@@ -1,0 +1,16 @@
+<div class="flex justify-center items-center py-16">
+    <div class="flex flex-col items-center gap-4">
+        <div class="relative w-16 h-16">
+            <div class="absolute inset-0 rounded-full border-4 border-violet-200 dark:border-violet-900"></div>
+            <div class="absolute inset-0 rounded-full border-4 border-violet-600 border-t-transparent animate-spin"></div>
+        </div>
+        @if (!string.IsNullOrEmpty(Message))
+        {
+            <p class="text-gray-500 dark:text-gray-400 text-sm animate-pulse">@Message</p>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Message { get; set; } = "Loading...";
+}

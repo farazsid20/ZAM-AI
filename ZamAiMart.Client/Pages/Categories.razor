@@ -1,0 +1,39 @@
+@page "/categories"
+@using ZamAiMart.Client.Models
+@using ZamAiMart.Client.Services
+@using ZamAiMart.Client.Shared
+@inject ApiService Api
+
+<PageTitle>Categories - ZAM AI MART</PageTitle>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="mb-8 text-center">
+        <h1 class="text-3xl font-black text-gray-900 dark:text-white mb-2">Browse by Category</h1>
+        <p class="text-gray-500 dark:text-gray-400">Explore AI tools organized by their primary use case</p>
+    </div>
+
+    @if (_loading)
+    {
+        <LoadingSpinner Message="Loading categories..." />
+    }
+    else
+    {
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            @foreach (var cat in _categories)
+            {
+                <CategoryCard Category="cat" />
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private List<CategoryDto> _categories = new();
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _categories = await Api.GetCategoriesAsync();
+        _loading = false;
+    }
+}

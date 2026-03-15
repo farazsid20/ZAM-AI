@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="ZAM AI MART - Discover the Best AI Tools in One Place. Browse 200+ AI tools with prices in Indian Rupees." />
+    <meta name="keywords" content="AI tools, artificial intelligence, ChatGPT, Midjourney, AI directory, India" />
+    <meta name="author" content="Ahmad Faraz Siddiqui" />
+    <title>ZAM AI MART</title>
+    <base href="/" />
+
+    <!-- GitHub Pages SPA routing: restore path from 404.html redirect -->
+    <script>
+      (function(l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search.slice(1).split('&').map(function(s) {
+            return s.replace(/~and~/g, '&');
+          }).join('?');
+          window.history.replaceState(null, null,
+            l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location));
+    </script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        violet: {
+                            50:'#f5f3ff',100:'#ede9fe',200:'#ddd6fe',300:'#c4b5fd',
+                            400:'#a78bfa',500:'#8b5cf6',600:'#7c3aed',700:'#6d28d9',
+                            800:'#5b21b6',900:'#4c1d95',950:'#2e1065'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <link href="css/app.css" rel="stylesheet" />
+    <link href="ZamAiMart.Client.styles.css" rel="stylesheet" />
+
+    <!-- Loading screen styles -->
+    <style>
+        #loading-screen {
+            position: fixed; inset: 0;
+            background: linear-gradient(135deg, #7c3aed, #4338ca);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 9999; color: white;
+            transition: opacity 0.4s ease;
+        }
+        #loading-screen.fade-out { opacity: 0; pointer-events: none; }
+        .loading-logo {
+            width: 72px; height: 72px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 38px; font-weight: 900;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255,255,255,0.25);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+        .loading-title {
+            font-size: 24px; font-weight: 900;
+            letter-spacing: 2px; margin-bottom: 6px;
+        }
+        .loading-sub {
+            font-size: 13px; opacity: 0.65;
+            margin-bottom: 32px; letter-spacing: 0.5px;
+        }
+        .loading-spinner {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-top-color: white;
+            animation: spin 0.85s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%237c3aed'/><text y='.9em' font-size='70' x='50%' text-anchor='middle' fill='white'>Z</text></svg>" />
+</head>
+
+<body class="antialiased">
+
+    <!-- Loading screen lives OUTSIDE #app so Blazor DOM mutations don't conflict -->
+    <div id="loading-screen">
+        <div class="loading-logo">Z</div>
+        <div class="loading-title">ZAM AI MART</div>
+        <div class="loading-sub">Discover the Best AI Tools</div>
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Blazor root -->
+    <div id="app"></div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="." class="reload">Reload</a>
+        <span class="dismiss">🗙</span>
+    </div>
+
+    <script>
+        // Dark mode
+        window.darkMode = {
+            get: function () {
+                var s = localStorage.getItem('darkMode');
+                return s !== null ? s === 'true' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+            },
+            toggle: function (isDark) {
+                localStorage.setItem('darkMode', isDark.toString());
+                document.documentElement.classList.toggle('dark', isDark);
+            }
+        };
+        if (window.darkMode.get()) document.documentElement.classList.add('dark');
+
+        // Hide loading screen as soon as Blazor renders any content into #app
+        (function () {
+            var screen = document.getElementById('loading-screen');
+            var app    = document.getElementById('app');
+            if (!screen || !app) return;
+
+            var observer = new MutationObserver(function () {
+                if (app.childElementCount > 0) {
+                    screen.classList.add('fade-out');
+                    setTimeout(function () { screen.remove(); }, 420);
+                    observer.disconnect();
+                }
+            });
+            observer.observe(app, { childList: true, subtree: false });
+
+            // If Blazor shows its error UI, also remove the loading screen so the user can see it
+            var errorUi = document.getElementById('blazor-error-ui');
+            if (errorUi) {
+                var errorObserver = new MutationObserver(function () {
+                    var style = window.getComputedStyle(errorUi);
+                    if (style && style.display !== 'none') {
+                        screen.classList.add('fade-out');
+                        setTimeout(function () { screen.remove(); }, 420);
+                        errorObserver.disconnect();
+                    }
+                });
+                errorObserver.observe(errorUi, { attributes: true, attributeFilter: ['style', 'class'] });
+            }
+
+            // After 12s show "still loading" hint (Blazor WASM is large on first visit)
+            setTimeout(function () {
+                var sub = document.querySelector('#loading-screen .loading-sub');
+                if (sub) sub.textContent = 'Still loading... first visit may take a moment';
+            }, 12000);
+
+            // After 30s escalate message
+            setTimeout(function () {
+                var sub = document.querySelector('#loading-screen .loading-sub');
+                if (sub) sub.textContent = 'Almost there... downloading runtime...';
+            }, 30000);
+
+            // Hard-kill fallback at 90s
+            setTimeout(function () {
+                if (document.getElementById('loading-screen')) {
+                    screen.innerHTML = '<div style="text-align:center;padding:32px">'
+                        + '<div class="loading-logo" style="margin:0 auto 16px">Z</div>'
+                        + '<div class="loading-title">ZAM AI MART</div>'
+                        + '<p style="font-size:13px;opacity:0.7;margin-top:12px">Taking longer than expected.<br>'
+                        + 'Please check your connection and try again.</p>'
+                        + '<a href="." style="display:inline-block;margin-top:20px;padding:10px 24px;background:rgba(255,255,255,0.15);border-radius:12px;font-size:13px;border:1px solid rgba(255,255,255,0.3)">Retry</a>'
+                        + '</div>';
+                }
+            }, 90000);
+        })();
+    </script>
+
+    <script src="_framework/blazor.webassembly.js"></script>
+</body>
+
+</html>

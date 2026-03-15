@@ -1,0 +1,130 @@
+@page "/about"
+
+<PageTitle>About - ZAM AI MART</PageTitle>
+
+<div class="bg-gradient-to-r from-violet-700 to-indigo-700 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl sm:text-4xl font-black mb-2">About ZAM AI MART</h1>
+        <p class="text-white/80">Discover, compare, and find the perfect AI tools</p>
+    </div>
+</div>
+
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <!-- Mission -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 mb-8">
+        <div class="text-4xl mb-4">🎯</div>
+        <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-4">Our Mission</h2>
+        <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+            <strong class="text-violet-600">ZAM AI MART</strong> helps users discover the best AI tools available online.
+            The platform organizes AI tools by category and shows their pricing in <strong>Indian Rupees (₹)</strong>,
+            making it easy for Indian users and businesses to find and evaluate AI solutions.
+        </p>
+    </div>
+
+    <!-- What We Offer -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 mb-8">
+        <div class="text-4xl mb-4">✨</div>
+        <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-6">What We Offer</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex items-start gap-3">
+                <div class="w-8 h-8 bg-violet-100 dark:bg-violet-900/30 rounded-lg flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-violet-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white">200+ AI Tools Listed</h3>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">Comprehensive directory of AI tools across all categories</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-3">
+                <div class="w-8 h-8 bg-violet-100 dark:bg-violet-900/30 rounded-lg flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-violet-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white">₹ INR Pricing</h3>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">All prices displayed in Indian Rupees for easy comparison</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-3">
+                <div class="w-8 h-8 bg-violet-100 dark:bg-violet-900/30 rounded-lg flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-violet-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white">10 Categories</h3>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">Organized by category from Chatbots to Design Tools</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-3">
+                <div class="w-8 h-8 bg-violet-100 dark:bg-violet-900/30 rounded-lg flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-violet-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900 dark:text-white">Smart Search</h3>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">Search by name, category, or keywords instantly</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 mb-8">
+        <div class="text-4xl mb-4">📂</div>
+        <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-6">Tool Categories</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            @foreach (var cat in _cats)
+            {
+                <div class="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                    <span class="text-xl">@cat.Item1</span>
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">@cat.Item2</span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Developer -->
+    <div class="bg-gradient-to-br from-violet-50 to-indigo-50 dark:from-violet-900/20 dark:to-indigo-900/20 rounded-2xl border border-violet-200 dark:border-violet-700 p-8">
+        <div class="text-4xl mb-4">👨‍💻</div>
+        <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-4">Developer</h2>
+        <div class="flex items-start gap-4">
+            <div class="w-16 h-16 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-2xl flex items-center justify-center shrink-0">
+                <span class="text-white text-2xl font-black">A</span>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Ahmad Faraz Siddiqui</h3>
+                <p class="text-gray-600 dark:text-gray-400 mt-1">Full-Stack Developer | AI Enthusiast</p>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mt-3 leading-relaxed">
+                    Passionate about making AI tools accessible to everyone, especially the Indian tech community.
+                    Built ZAM AI MART to bridge the gap between AI innovation and accessibility.
+                </p>
+                <div class="mt-3 flex items-center gap-2">
+                    <a href="tel:+919161007123" class="inline-flex items-center gap-1 text-violet-600 dark:text-violet-400 text-sm hover:underline">
+                        📞 +91-9161007123
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private readonly List<(string, string)> _cats = new()
+    {
+        ("💬", "AI Chatbots"),
+        ("🎨", "Image Generators"),
+        ("🎬", "Video Generators"),
+        ("💻", "Coding Tools"),
+        ("✍️", "Writing Tools"),
+        ("🎙️", "Voice Tools"),
+        ("🎵", "Music Generators"),
+        ("📈", "Marketing Tools"),
+        ("⚡", "Productivity Tools"),
+        ("🖌️", "Design Tools"),
+    };
+}

@@ -1,0 +1,15 @@
+@using ZamAiMart.Client.Models
+@inject NavigationManager Nav
+
+<div @onclick="GoToCategory"
+     class="group bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-xl hover:shadow-violet-100 dark:hover:shadow-violet-900/20 hover:border-violet-200 dark:hover:border-violet-700 transition-all duration-300 cursor-pointer text-center">
+    <div class="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">@Category.Icon</div>
+    <h3 class="font-bold text-gray-900 dark:text-white mb-2 group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors text-sm">@Category.CategoryName</h3>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public CategoryDto Category { get; set; } = null!;
+
+    private void GoToCategory()
+        => Nav.NavigateTo($"/tools?category={Uri.EscapeDataString(Category.CategoryName)}");
+}

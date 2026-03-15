@@ -1,0 +1,104 @@
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <!-- Logo -->
+            <a href="/" class="flex items-center space-x-2 group">
+                <div class="w-9 h-9 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-violet-300 dark:group-hover:shadow-violet-800 transition-shadow">
+                    <span class="text-white font-black text-sm">Z</span>
+                </div>
+                <div>
+                    <span class="text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-indigo-600">ZAM</span>
+                    <span class="text-lg font-black text-gray-800 dark:text-white"> AI MART</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav -->
+            <div class="hidden md:flex items-center space-x-1">
+                <NavLink href="/" Match="NavLinkMatch.All" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-all">
+                    Home
+                </NavLink>
+                <NavLink href="/tools" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-all">
+                    AI Tools
+                </NavLink>
+                <NavLink href="/categories" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-all">
+                    Categories
+                </NavLink>
+                <NavLink href="/about" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-all">
+                    About
+                </NavLink>
+                <NavLink href="/contact" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-all">
+                    Contact
+                </NavLink>
+                <NavLink href="/admin" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-all">
+                    Admin
+                </NavLink>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center space-x-2">
+                <button @onclick="ToggleDarkMode" class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all" title="Toggle dark mode">
+                    @if (_isDark)
+                    {
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
+                        </svg>
+                    }
+                    else
+                    {
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                        </svg>
+                    }
+                </button>
+                <!-- Mobile menu button -->
+                <button @onclick="ToggleMobileMenu" class="md:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        @if (_mobileOpen)
+        {
+            <div class="md:hidden pb-3 border-t border-gray-200 dark:border-gray-700 mt-2">
+                <div class="flex flex-col space-y-1 pt-2">
+                    <a href="/" @onclick="CloseMobile" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-900/20">Home</a>
+                    <a href="/tools" @onclick="CloseMobile" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-900/20">AI Tools</a>
+                    <a href="/categories" @onclick="CloseMobile" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-900/20">Categories</a>
+                    <a href="/about" @onclick="CloseMobile" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-900/20">About</a>
+                    <a href="/contact" @onclick="CloseMobile" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-900/20">Contact</a>
+                    <a href="/admin" @onclick="CloseMobile" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-900/20">Admin</a>
+                </div>
+            </div>
+        }
+    </div>
+</nav>
+
+@code {
+    private bool _isDark;
+    private bool _mobileOpen;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _isDark = await JS.InvokeAsync<bool>("darkMode.get");
+            StateHasChanged();
+        }
+    }
+
+    private async Task ToggleDarkMode()
+    {
+        _isDark = !_isDark;
+        await JS.InvokeVoidAsync("darkMode.toggle", _isDark);
+        StateHasChanged();
+    }
+
+    private void ToggleMobileMenu() => _mobileOpen = !_mobileOpen;
+    private void CloseMobile() => _mobileOpen = false;
+}
