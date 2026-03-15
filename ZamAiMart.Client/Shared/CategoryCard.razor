@@ -11,5 +11,6 @@
     [Parameter, EditorRequired] public CategoryDto Category { get; set; } = null!;
 
     private void GoToCategory()
-        => Nav.NavigateTo($"/tools?category={Uri.EscapeDataString(Category.CategoryName)}");
+        => Nav.NavigateTo($"tools?category={Uri.EscapeDataString(Category.CategoryName)}");
 }
+
