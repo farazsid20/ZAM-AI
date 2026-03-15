@@ -39,10 +39,9 @@ jobs:
             --no-restore \
             -p:BlazorCacheBootResources=false
 
-      - name: Fix base href and bootstrap script
+      - name: Prepare GitHub Pages output
         run: |
           cd publish/client/wwwroot
-          sed -i 's|<base href="/" />|<base href="/ZAM-AI/" />|g' index.html
 
           BLAZOR_JS=$(find _framework -maxdepth 1 -name "blazor.webassembly*.js" \
                         ! -name "*.gz" ! -name "*.br" | head -1 | xargs basename 2>/dev/null || true)
