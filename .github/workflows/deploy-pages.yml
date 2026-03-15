@@ -1,0 +1,77 @@
+name: Deploy Blazor WASM to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Blazor WASM
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore dependencies
+        run: dotnet restore ZamAiMart.Client/ZamAiMart.Client.csproj
+
+      - name: Publish Blazor WASM for GitHub Pages
+        run: |
+          dotnet publish ZamAiMart.Client/ZamAiMart.Client.csproj \
+            -c Release \
+            -o publish/client \
+            --no-restore \
+            -p:BlazorCacheBootResources=false
+
+      - name: Fix base href and bootstrap script
+        run: |
+          cd publish/client/wwwroot
+          sed -i 's|<base href="/" />|<base href="/ZAM-AI/" />|g' index.html
+
+          BLAZOR_JS=$(find _framework -maxdepth 1 -name "blazor.webassembly*.js" \
+                        ! -name "*.gz" ! -name "*.br" | head -1 | xargs basename 2>/dev/null || true)
+          if [ -n "$BLAZOR_JS" ]; then
+            sed -i "s|_framework/blazor.webassembly.js|_framework/${BLAZOR_JS}|g" index.html
+          fi
+
+          cp index.html 404.html
+
+      - name: Add .nojekyll
+        run: touch publish/client/wwwroot/.nojekyll
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: publish/client/wwwroot
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
