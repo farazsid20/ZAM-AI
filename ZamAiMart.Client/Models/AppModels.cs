@@ -11,8 +11,48 @@ public class AIWebsiteDto
     public string WebsiteURL { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string? LogoURL { get; set; }
-    public string FormattedPrice => IsFree ? "FREE" : $"₹{PriceINR:N0}";
+    public string FormattedPrice => IsFree ? "FREE" : $"\u20B9{PriceINR:N0}";
     public DateTime CreatedAt { get; set; }
+    public string PrimaryLogoURL => !string.IsNullOrWhiteSpace(LogoURL) ? LogoURL! : OfficialIconURL;
+
+    public string OfficialIconURL
+    {
+        get
+        {
+            if (!TryGetBaseUri(out var baseUri))
+            {
+                return string.Empty;
+            }
+
+            return $"{baseUri}/favicon.ico";
+        }
+    }
+
+    public string ReliablePublicIconURL
+    {
+        get
+        {
+            if (!TryGetBaseUri(out var baseUri))
+            {
+                return string.Empty;
+            }
+
+            return $"https://www.google.com/s2/favicons?sz=128&domain_url={Uri.EscapeDataString(baseUri)}";
+        }
+    }
+
+    private bool TryGetBaseUri(out string baseUri)
+    {
+        baseUri = string.Empty;
+
+        if (!Uri.TryCreate(WebsiteURL, UriKind.Absolute, out var uri))
+        {
+            return false;
+        }
+
+        baseUri = $"{uri.Scheme}://{uri.Host}";
+        return true;
+    }
 }
 
 /// <summary>Matches the CategoryDto returned by /api/categories</summary>

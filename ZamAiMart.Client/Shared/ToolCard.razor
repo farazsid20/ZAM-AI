@@ -5,16 +5,13 @@
      @onclick="OpenWebsite">
     <div class="flex items-start justify-between mb-3">
         <div class="flex items-center space-x-3">
-            <div class="w-12 h-12 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center shrink-0">
-                @if (!string.IsNullOrEmpty(Tool.LogoURL))
+            <div class="w-12 h-12 rounded-xl overflow-hidden bg-white dark:bg-gray-900 ring-1 ring-gray-200 dark:ring-gray-700 flex items-center justify-center shrink-0 p-2">
+                @if (!string.IsNullOrWhiteSpace(_logoUrl))
                 {
-                    <img src="@Tool.LogoURL" alt="@Tool.Name logo" class="w-full h-full object-cover"
-                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-                    <span class="text-xl hidden">@GetIcon()</span>
-                }
-                else
-                {
-                    <span class="text-xl">🤖</span>
+                    <img src="@_logoUrl"
+                         alt="@Tool.Name logo"
+                         class="w-full h-full object-contain"
+                         @onerror="HandleLogoError" />
                 }
             </div>
             <div class="min-w-0">
@@ -41,23 +38,36 @@
 @code {
     [Parameter, EditorRequired] public AIWebsiteDto Tool { get; set; } = null!;
 
+    private string _logoUrl = string.Empty;
+    private int _logoFallbackStep;
+
+    protected override void OnParametersSet()
+    {
+        _logoUrl = Tool.PrimaryLogoURL;
+        _logoFallbackStep = 0;
+    }
+
     private async Task OpenWebsite()
     {
         await JS.InvokeVoidAsync("open", Tool.WebsiteURL, "_blank");
     }
 
-    private string GetIcon() => Tool.Category switch
+    private void HandleLogoError()
     {
-        var c when c.Contains("Chatbot") => "💬",
-        var c when c.Contains("Image") => "🎨",
-        var c when c.Contains("Video") => "🎬",
-        var c when c.Contains("Code") => "💻",
-        var c when c.Contains("Writing") => "✍️",
-        var c when c.Contains("Voice") || c.Contains("Audio") => "🎙️",
-        var c when c.Contains("Music") => "🎵",
-        var c when c.Contains("Business") => "📈",
-        var c when c.Contains("Productivity") => "⚡",
-        var c when c.Contains("Design") => "🖌️",
-        _ => "🤖"
-    };
+        if (_logoFallbackStep == 0 && !string.IsNullOrWhiteSpace(Tool.OfficialIconURL) && _logoUrl != Tool.OfficialIconURL)
+        {
+            _logoUrl = Tool.OfficialIconURL;
+            _logoFallbackStep = 1;
+            return;
+        }
+
+        if (_logoFallbackStep <= 1 && !string.IsNullOrWhiteSpace(Tool.ReliablePublicIconURL) && _logoUrl != Tool.ReliablePublicIconURL)
+        {
+            _logoUrl = Tool.ReliablePublicIconURL;
+            _logoFallbackStep = 2;
+            return;
+        }
+
+        _logoUrl = string.Empty;
+    }
 }
