@@ -1,8 +1,8 @@
 @using ZamAiMart.Client.Models
-@inject Microsoft.JSInterop.IJSRuntime JS
+@inject NavigationManager Nav
 
 <div class="group bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 hover:shadow-xl hover:shadow-violet-100 dark:hover:shadow-violet-900/20 hover:border-violet-200 dark:hover:border-violet-700 transition-all duration-300 cursor-pointer flex flex-col"
-     @onclick="OpenWebsite">
+     @onclick="OpenDetails">
     <div class="flex items-start justify-between mb-3">
         <div class="flex items-center space-x-3">
             <div class="w-12 h-12 rounded-xl overflow-hidden bg-white dark:bg-gray-900 ring-1 ring-gray-200 dark:ring-gray-700 flex items-center justify-center shrink-0 p-2">
@@ -25,14 +25,33 @@
         <span class="@(Tool.IsFree ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400" : "bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400") text-xs font-bold px-2.5 py-1 rounded-lg">
             @Tool.FormattedPrice
         </span>
-        <button @onclick:stopPropagation="true" @onclick="OpenWebsite"
-                class="text-xs bg-violet-600 hover:bg-violet-700 text-white px-3 py-1.5 rounded-lg font-medium transition-colors flex items-center gap-1">
-            Visit
+        <a href="@Tool.WebsiteURL" target="_blank" rel="noopener noreferrer" @onclick:stopPropagation="true"
+           class="text-xs bg-violet-600 hover:bg-violet-700 text-white px-3 py-1.5 rounded-lg font-medium transition-colors flex items-center gap-1">
+            Visit Website
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
-        </button>
+        </a>
     </div>
+    @if (Tool.HasMobileApps)
+    {
+        <div class="mt-3 flex flex-wrap gap-2">
+            @if (Tool.HasPlayStoreUrl)
+            {
+                <a href="@Tool.PlayStoreUrl" target="_blank" rel="noopener noreferrer" @onclick:stopPropagation="true"
+                   class="inline-flex items-center rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 transition-colors hover:bg-emerald-100 dark:border-emerald-800/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-emerald-900/40">
+                    Get on Play Store
+                </a>
+            }
+            @if (Tool.HasAppStoreUrl)
+            {
+                <a href="@Tool.AppStoreUrl" target="_blank" rel="noopener noreferrer" @onclick:stopPropagation="true"
+                   class="inline-flex items-center rounded-xl border border-sky-200 bg-sky-50 px-3 py-2 text-xs font-semibold text-sky-700 transition-colors hover:bg-sky-100 dark:border-sky-800/80 dark:bg-sky-950/40 dark:text-sky-300 dark:hover:bg-sky-900/40">
+                    Download on App Store
+                </a>
+            }
+        </div>
+    }
 </div>
 
 @code {
@@ -47,10 +66,7 @@
         _logoFallbackStep = 0;
     }
 
-    private async Task OpenWebsite()
-    {
-        await JS.InvokeVoidAsync("open", Tool.WebsiteURL, "_blank");
-    }
+    private void OpenDetails() => Nav.NavigateTo($"/tools/{Tool.Id}");
 
     private void HandleLogoError()
     {

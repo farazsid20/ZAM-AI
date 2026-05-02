@@ -126,6 +126,14 @@
                 document.documentElement.classList.toggle('dark', isDark);
             }
         };
+        window.browserStore = {
+            get: function (key) {
+                return localStorage.getItem(key);
+            },
+            set: function (key, value) {
+                localStorage.setItem(key, value);
+            }
+        };
         if (window.darkMode.get()) document.documentElement.classList.add('dark');
 
         // Hide loading screen as soon as Blazor renders any content into #app

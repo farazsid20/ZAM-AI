@@ -1,0 +1,111 @@
+@page "/tools/{Id:int}"
+@using ZamAiMart.Client.Models
+@using ZamAiMart.Client.Services
+@inject ApiService Api
+
+<PageTitle>@(_tool is null ? "Tool Details" : $"{_tool.Name} - ZAM AI MART")</PageTitle>
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    @if (_loading)
+    {
+        <LoadingSpinner Message="Loading tool details..." />
+    }
+    else if (_tool is null)
+    {
+        <div class="rounded-3xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center dark:border-gray-700 dark:bg-gray-800">
+            <h1 class="mb-3 text-3xl font-black text-gray-900 dark:text-white">Tool not found</h1>
+            <p class="text-gray-500 dark:text-gray-400">This AI tool may have been removed or the link is invalid.</p>
+        </div>
+    }
+    else
+    {
+        <div class="overflow-hidden rounded-[2rem] border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+            <div class="bg-gradient-to-r from-violet-600 via-indigo-600 to-sky-600 p-8 text-white">
+                <div class="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+                    <div class="flex items-start gap-4">
+                        <div class="flex h-20 w-20 items-center justify-center rounded-3xl bg-white/95 p-3 shadow-lg">
+                            @if (!string.IsNullOrWhiteSpace(_tool.PrimaryLogoURL))
+                            {
+                                <img src="@_tool.PrimaryLogoURL" alt="@_tool.Name logo" class="h-full w-full object-contain" />
+                            }
+                        </div>
+                        <div>
+                            <p class="mb-2 inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
+                                @_tool.Category
+                            </p>
+                            <h1 class="text-3xl font-black sm:text-4xl">@_tool.Name</h1>
+                            <p class="mt-3 max-w-2xl text-sm leading-7 text-white/80 sm:text-base">@_tool.Description</p>
+                        </div>
+                    </div>
+                    <div class="rounded-3xl border border-white/15 bg-slate-950/20 px-5 py-4 backdrop-blur-sm">
+                        <div class="text-xs font-semibold uppercase tracking-[0.2em] text-white/60">Pricing</div>
+                        <div class="mt-2 text-2xl font-black">@_tool.FormattedPrice</div>
+                        <div class="mt-1 text-sm text-white/70">@(_tool.IsFree ? "Available for free" : "Approximate monthly price")</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid gap-6 p-8 lg:grid-cols-[1.4fr_0.8fr]">
+                <div>
+                    <h2 class="text-xl font-black text-gray-900 dark:text-white">Get Started</h2>
+                    <p class="mt-2 text-sm leading-7 text-gray-600 dark:text-gray-400">
+                        Visit the official website or jump straight to the mobile app stores when available.
+                    </p>
+
+                    <div class="mt-6 flex flex-wrap gap-3">
+                        <a href="@_tool.WebsiteURL" target="_blank" rel="noopener noreferrer"
+                           class="inline-flex items-center justify-center rounded-2xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-violet-700 hover:shadow-lg hover:shadow-violet-200 dark:hover:shadow-violet-950/40">
+                            Visit Website
+                        </a>
+                        @if (_tool.HasPlayStoreUrl)
+                        {
+                            <a href="@_tool.PlayStoreUrl" target="_blank" rel="noopener noreferrer"
+                               class="inline-flex items-center justify-center rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-3 text-sm font-semibold text-emerald-700 transition-colors hover:bg-emerald-100 dark:border-emerald-800/80 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-emerald-900/40">
+                                Play Store
+                            </a>
+                        }
+                        @if (_tool.HasAppStoreUrl)
+                        {
+                            <a href="@_tool.AppStoreUrl" target="_blank" rel="noopener noreferrer"
+                               class="inline-flex items-center justify-center rounded-2xl border border-sky-200 bg-sky-50 px-5 py-3 text-sm font-semibold text-sky-700 transition-colors hover:bg-sky-100 dark:border-sky-800/80 dark:bg-sky-950/40 dark:text-sky-300 dark:hover:bg-sky-900/40">
+                                App Store
+                            </a>
+                        }
+                    </div>
+                </div>
+
+                <div class="rounded-3xl border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-900/40">
+                    <h2 class="text-lg font-black text-gray-900 dark:text-white">Mobile Availability</h2>
+                    <div class="mt-4 space-y-3">
+                        <div class="flex items-center justify-between rounded-2xl bg-white px-4 py-3 dark:bg-gray-800">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Google Play</span>
+                            <span class="text-sm font-semibold @(_tool.HasPlayStoreUrl ? "text-emerald-600 dark:text-emerald-400" : "text-gray-400 dark:text-gray-500")">
+                                @(_tool.HasPlayStoreUrl ? "Available" : "Not available")
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between rounded-2xl bg-white px-4 py-3 dark:bg-gray-800">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">App Store</span>
+                            <span class="text-sm font-semibold @(_tool.HasAppStoreUrl ? "text-sky-600 dark:text-sky-400" : "text-gray-400 dark:text-gray-500")">
+                                @(_tool.HasAppStoreUrl ? "Available" : "Not available")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private AIWebsiteDto? _tool;
+    private bool _loading = true;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _loading = true;
+        _tool = await Api.GetWebsiteByIdAsync(Id);
+        _loading = false;
+    }
+}
