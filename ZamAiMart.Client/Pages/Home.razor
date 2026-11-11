@@ -8,7 +8,7 @@
 <PageTitle>ZAM AI MART - Discover the Best AI Tools in One Place</PageTitle>
 
 <!-- Hero -->
-<section class="relative bg-gradient-to-br from-violet-700 via-indigo-700 to-purple-800 text-white overflow-hidden">
+<section class="home-hero text-white">
     <div class="absolute inset-0 opacity-10">
         <div class="absolute top-10 left-10 w-72 h-72 bg-white rounded-full filter blur-3xl"></div>
         <div class="absolute bottom-10 right-10 w-96 h-96 bg-pink-300 rounded-full filter blur-3xl"></div>
@@ -31,7 +31,7 @@
                 </svg>
                 <input type="text" @bind="_search" @onkeydown="HandleSearchKey"
                        placeholder="Search AI tools, categories, keywords..."
-                       class="w-full pl-12 pr-4 py-4 rounded-2xl text-gray-900 text-base shadow-2xl focus:outline-none focus:ring-2 focus:ring-violet-300 border-0" />
+                       class="hero-search w-full pl-12 pr-32 py-4 rounded-2xl text-gray-900 text-base focus:outline-none focus:ring-2 focus:ring-violet-300" />
                 <button @onclick="ExecuteSearch"
                         class="absolute right-2 top-1/2 -translate-y-1/2 bg-violet-600 hover:bg-violet-700 text-white px-5 py-2 rounded-xl font-medium transition-colors text-sm">
                     Search
@@ -39,9 +39,9 @@
             </div>
         </div>
         <div class="flex flex-wrap justify-center gap-8 mt-12">
-            <div class="text-center"><div class="text-3xl font-black">50+</div><div class="text-white/70 text-sm">AI Tools</div></div>
-            <div class="text-center"><div class="text-3xl font-black">10</div><div class="text-white/70 text-sm">Categories</div></div>
-            <div class="text-center"><div class="text-3xl font-black">₹</div><div class="text-white/70 text-sm">INR Pricing</div></div>
+            <div class="glass-stat text-center"><div class="text-3xl font-black">50+</div><div class="text-white/70 text-sm">AI Tools</div></div>
+            <div class="glass-stat text-center"><div class="text-3xl font-black">10</div><div class="text-white/70 text-sm">Categories</div></div>
+            <div class="glass-stat text-center"><div class="text-3xl font-black">₹</div><div class="text-white/70 text-sm">INR Pricing</div></div>
         </div>
     </div>
 </section>
@@ -73,7 +73,7 @@
 </section>
 
 <!-- Categories -->
-<section class="bg-gray-100 dark:bg-gray-800/50 py-16">
+<section class="ambient-band py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-10">
             <h2 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white mb-2">Browse by Category</h2>
@@ -122,7 +122,7 @@
 </section>
 
 <!-- CTA -->
-<section class="bg-gradient-to-r from-violet-600 to-indigo-600 py-16">
+<section class="glass-cta py-16 text-white">
     <div class="max-w-4xl mx-auto px-4 text-center text-white">
         <h2 class="text-3xl font-black mb-4">Ready to Find Your Perfect AI Tool?</h2>
         <p class="text-white/80 mb-8 text-lg">Browse 50+ AI tools with prices in Indian Rupees</p>
@@ -170,4 +170,3 @@
         return Task.CompletedTask;
     }
 }
-

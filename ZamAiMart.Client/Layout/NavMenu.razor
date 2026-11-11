@@ -1,7 +1,7 @@
 @inject NavigationManager Nav
 @inject IJSRuntime JS
 
-<nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 shadow-sm">
+<nav class="glass-nav z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
             <!-- Logo -->
@@ -102,4 +102,3 @@
     private void ToggleMobileMenu() => _mobileOpen = !_mobileOpen;
     private void CloseMobile() => _mobileOpen = false;
 }
-
